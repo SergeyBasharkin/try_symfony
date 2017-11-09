@@ -1,0 +1,16 @@
+.test {
+    color: red;
+}
+
+.post {
+    color: #323232;
+}
+
+
+.paging {
+    bottom: 0 !important;
+}
+
+.chip-wrapper {
+    padding-top: 25px !important;
+}
