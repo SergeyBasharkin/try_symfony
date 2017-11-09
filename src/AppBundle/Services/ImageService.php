@@ -17,7 +17,7 @@ class ImageService
         $background_color = imagecolorallocate($im, 222,222,222 );
         $text_color = imagecolorallocate($im, 233, 14, 91);
         imagestring($im, 200, 200, 100, $text, $text_color);
-        imagepng($im);
-        return $im;
+        imagepng($im, 'img.png');
+        return readfile('img.png');
     }
 }
