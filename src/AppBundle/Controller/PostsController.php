@@ -26,16 +26,16 @@ class PostsController extends Controller
     /**
      * @Route("/image", name="image")
      */
-    public function image()
+    public function image(Request $request)
     {
-        $image = 'img.png';
-        $headers = array(
-            'Content-Type' => 'image/png',
-            'Content-Disposition' => 'inline; filename="' . $image . '"');
+        $file = $this->imageService->generateImage(date("Y-m-d H:i:s").' browser:'.$request->query->get("browser"));
 
-        $file = $this->imageService->generateImage(date("Y-m-d H:i:s"));
+        $response = new Response();
+        $response->setStatusCode(200);
+        $response->setContent($file);
+        $response->headers->set("Content-Type", "image/png");
 
-        return new Response($file, 200, $headers);
+        return $response;
     }
 
     /**

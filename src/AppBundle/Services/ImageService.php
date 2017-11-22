@@ -13,10 +13,10 @@ class ImageService
 {
 
     public function generateImage(string $text){
-        $im = imagecreate(500, 500);
-        $background_color = imagecolorallocate($im, 222,222,222 );
+        $im = imagecreate(900, 500);
+        imagecolorallocate($im, 222,222,222 );
         $text_color = imagecolorallocate($im, 233, 14, 91);
-        imagestring($im, 200, 200, 100, $text, $text_color);
+        imagestring($im, 200, 15, 15, $text, $text_color);
         imagepng($im, 'img.png');
         return readfile('img.png');
     }
