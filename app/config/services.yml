@@ -29,7 +29,7 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    # add more services, or override services that need manual wiring
+        # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
@@ -37,3 +37,10 @@ services:
     AppBundle\Listeners\RequestListener:
       tags:
           - {name: kernel.event_listener, event: kernel.request}
+
+    admin.post:
+            class: AppBundle\Admin\PostAdmin
+            arguments: [~, AppBundle\Entity\Post, ~]
+            tags:
+                - { name: sonata.admin, manager_type: orm, label: Post }
+            public: true

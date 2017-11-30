@@ -30,6 +30,7 @@ framework:
     fragments: ~
     http_method_override: true
     assets: ~
+    translator: { fallbacks: ["%locale%"] }
     php_errors:
         log: true
 
@@ -41,7 +42,7 @@ twig:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver: pdo_mysql
+        driver: pdo_pgsql
         host: '%database_host%'
         port: '%database_port%'
         dbname: '%database_name%'
@@ -67,3 +68,16 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        # enable the SonataAdminBundle block
+        sonata.admin.block.admin_list:
+            contexts: [admin]
+
+circle_rest_client:
+    curl:
+      defaults:
+        CURLOPT_HTTPHEADER:     [ 'Content-Type: application/json' ]
+        CURLOPT_FOLLOWLOCATION: true
