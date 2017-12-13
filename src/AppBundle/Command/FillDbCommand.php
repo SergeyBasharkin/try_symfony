@@ -23,18 +23,14 @@ class FillDbCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->em = $this->getContainer()->get('doctrine')->getManager();
-        $this->cityRepository = $this->getContainer()->get('doctrine')
-            ->getRepository('AppBundle\Entity\City');
-        $this->heroRepository = $this->getContainer()->get('doctrine')
-            ->getRepository('AppBundle\Entity\Hero');
-
         $this->setName('app:fill-db')->setDescription('fill database')->setHelp('');
     }
 
+
+
     protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output)
     {
-
+        $this->init();
         $restClient = $this->getContainer()->get('circle.restclient');
         $content = $restClient->get("http://31.186.96.6:9090")->getContent();
         $json = json_decode((string)$content);
@@ -73,4 +69,11 @@ class FillDbCommand extends ContainerAwareCommand
         return $inCity;
     }
 
+    private function init(){
+        $this->em = $this->getContainer()->get('doctrine')->getManager();
+        $this->cityRepository = $this->getContainer()->get('doctrine')
+            ->getRepository('AppBundle\Entity\City');
+        $this->heroRepository = $this->getContainer()->get('doctrine')
+            ->getRepository('AppBundle\Entity\Hero');
+    }
 }

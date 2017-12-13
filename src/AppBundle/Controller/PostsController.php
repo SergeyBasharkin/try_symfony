@@ -4,6 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Services\ImageService;
 use AppBundle\Services\PostsService;
+use GraphQL\GraphQL;
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\Type;
+use GraphQL\Type\Schema;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,14 +18,17 @@ class PostsController extends Controller
 {
     private $postsService;
     private $imageService;
+    private $logger;
 
     /**
      * DefaultController constructor.
      */
-    public function __construct(PostsService $postsService, ImageService $imageService)
+    public function __construct(PostsService $postsService, ImageService $imageService,LoggerInterface $logger)
     {
         $this->postsService = $postsService;
         $this->imageService = $imageService;
+        $this->logger = $logger;
+
     }
 
     /**
@@ -36,6 +44,36 @@ class PostsController extends Controller
         $response->headers->set("Content-Type", "image/png");
 
         return $response;
+    }
+    /**
+     * @Route("/hello", name = "hello")
+     */
+    public function helloGraphQL(Request $request){
+
+        $query = $request->getContent();
+
+        // Содание типа данных "Запрос"
+        $queryType = new ObjectType([
+            'name' => 'Query',
+            'fields' => [
+                'hello' => [
+                    'type' => Type::string(),
+                    'description' => 'Возвращает приветствие',
+                    'resolve' => function () {
+                        return 'Привет, GraphQL!';
+                    }
+                ]
+            ]
+        ]);
+
+        // Создание схемы
+        $schema = new Schema([
+            'query' => $queryType
+        ]);
+
+        // Выполнение запроса
+        $result = GraphQL::executeQuery($schema, $query)->toArray();
+        return new Response(json_encode($result),200,["Content-Type"=>"application/json;UTF-8"]);
     }
 
     /**
