@@ -8,6 +8,8 @@
  */
 
 namespace AppBundle\Repositories;
+use Doctrine\ORM\EntityManagerInterface;
+
 class PostsRepository
 {
     public function getAllPosts($offset, $limit){
@@ -18,5 +20,17 @@ class PostsRepository
         return $page;
     }
 
+    private $em;
+    /**
+     * CommentRepository constructor.
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->em = $entityManager;
+    }
+
+    public function build(){
+        return $this->em->getRepository('AppBundle:Post');
+    }
 
 }

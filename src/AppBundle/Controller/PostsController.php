@@ -2,8 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Services\CommentService;
 use AppBundle\Services\ImageService;
 use AppBundle\Services\PostsService;
+use AppBundle\Type\QueryType;
+use AppBundle\Type\Types;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
@@ -23,7 +26,7 @@ class PostsController extends Controller
     /**
      * DefaultController constructor.
      */
-    public function __construct(PostsService $postsService, ImageService $imageService,LoggerInterface $logger)
+    public function __construct(PostsService $postsService, CommentService $commentService, ImageService $imageService,LoggerInterface $logger)
     {
         $this->postsService = $postsService;
         $this->imageService = $imageService;
@@ -48,23 +51,9 @@ class PostsController extends Controller
     /**
      * @Route("/hello", name = "hello")
      */
-    public function helloGraphQL(Request $request){
+    public function helloGraphQL(Request $request, QueryType $queryType){
 
         $query = $request->getContent();
-
-        // Содание типа данных "Запрос"
-        $queryType = new ObjectType([
-            'name' => 'Query',
-            'fields' => [
-                'hello' => [
-                    'type' => Type::string(),
-                    'description' => 'Возвращает приветствие',
-                    'resolve' => function () {
-                        return 'Привет, GraphQL!';
-                    }
-                ]
-            ]
-        ]);
 
         // Создание схемы
         $schema = new Schema([
@@ -75,6 +64,17 @@ class PostsController extends Controller
         $result = GraphQL::executeQuery($schema, $query)->toArray();
         return new Response(json_encode($result),200,["Content-Type"=>"application/json;UTF-8"]);
     }
+    /**
+     * @Route("/test", name = "test")
+     */
+    public function test(Types $type){
+
+        $s =  $type->post()->getPostService()->findAll();
+        dump($s);
+        return new Response(json_encode(""),200,["Content-Type"=>"application/json;UTF-8"]);
+    }
+
+
 
     /**
      * @Route("/", name="homepage")

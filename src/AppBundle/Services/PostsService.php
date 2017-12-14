@@ -22,7 +22,7 @@ class PostsService
      */
     public function __construct(PostsRepository $postsRepository)
     {
-        $this->postsRepository = $postsRepository;
+        $this->postsRepository = $postsRepository->build();
     }
 
     public function getAllPosts($page = 1){
@@ -31,5 +31,15 @@ class PostsService
         $offset = ($page - 1) * self::LIMIT_POSTS;
 
         return $this->postsRepository->getAllPosts($offset, self::LIMIT_POSTS);
+    }
+
+    public function findBy($id)
+    {
+       return $this->postsRepository->find($id);
+    }
+
+    public function findAll()
+    {
+        return $this->postsRepository->findAll();
     }
 }
